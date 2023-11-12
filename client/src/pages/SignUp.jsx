@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
   const [formData, setFormData] = useState(() => {});
-  const [error, setError] = useState(() => null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -17,6 +17,21 @@ export const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    if (!formData.username) {
+      setError("Please enter a username");
+      setLoading(false);
+      return;
+    }
+    if (!formData.email) {
+      setError("Please enter a email");
+      setLoading(false);
+      return;
+    }
+    if (!formData.password) {
+      setError("Please enter a password");
+      setLoading(false);
+      return;
+    }
     try {
       console.log("Request URL:", "/api/auth/signup");
       const res = await fetch("/api/auth/signup", {
@@ -29,7 +44,7 @@ export const SignUp = () => {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        setError(data.error);
+        setError(data.message);
         setLoading(false);
         return;
       }
