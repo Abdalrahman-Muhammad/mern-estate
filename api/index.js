@@ -16,6 +16,13 @@ app.use(express.json());
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 
+// global error handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  res.status(statusCode).json({ success: false, message, statusCode });
+});
+
 //server connection
 app.listen(process.env.PORT_NUM, () => {
   console.log(`server running on port number ${process.env.PORT_NUM}`);
