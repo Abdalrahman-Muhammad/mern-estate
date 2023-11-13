@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../redux/user/userSlice";
 export const SignIn = () => {
-  const [formData, setFormData] = useState(() => {});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -16,20 +24,14 @@ export const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(signInStart());
+    if (!formData.email || !formData.password) {
+      dispatch(signInFailure("Please enter all required fields"));
+      return;
+    }
+    console.log(`2`);
 
-    if (!formData.email) {
-      setError("Please enter a email");
-      setLoading(false);
-      return;
-    }
-    if (!formData.password) {
-      setError("Please enter a password");
-      setLoading(false);
-      return;
-    }
     try {
-      console.log("Request URL:", "/api/auth/signin");
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -38,18 +40,15 @@ export const SignIn = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
+
       if (data.success === false) {
-        setError(data.message);
-        setLoading(false);
+        dispatch(signInFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message));
       console.error(
         "🚀 ~ file: SignUp.jsx:18 ~ handleSubmit ~ error:",
         error.message
