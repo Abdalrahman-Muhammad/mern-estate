@@ -6,6 +6,7 @@ import cors from "cors";
 
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.router.js";
+import listingRouter from "./routes/listing.router.js";
 
 //database connection
 main();
@@ -20,6 +21,7 @@ app.use(cookieParser());
 //routes
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/listing", listingRouter);
 
 // global error handler
 app.use((err, req, res, next) => {
