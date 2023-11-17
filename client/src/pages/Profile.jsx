@@ -11,6 +11,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUserFailure,
+  signOutUserStart,
+  signOutUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -55,7 +58,7 @@ export const Profile = () => {
       }
     );
   };
-  console.log(currentUser);
+
   const handelInputChange = (e) => {
     setFormData({
       ...formData,
@@ -100,6 +103,22 @@ export const Profile = () => {
       dispatch(deleteUserSuccess());
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch(`/api/auth/signOut`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+      }
+      dispatch(signOutUserSuccess());
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
     }
   };
   return (
@@ -169,7 +188,9 @@ export const Profile = () => {
         >
           Delete account
         </span>
-        <span className="cursor-pointer text-blue-600">Sign out</span>
+        <span onClick={handleSignOut} className="cursor-pointer text-blue-600">
+          Sign out
+        </span>
       </div>
       <p className="text-red-700 text-center">{error ? error : ""}</p>
       <p className="text-green-700 text-center">
