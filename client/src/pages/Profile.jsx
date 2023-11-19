@@ -29,7 +29,6 @@ export const Profile = () => {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
-  const [showListingsLoading, setShowListingsLoading] = useState(false);
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
@@ -128,24 +127,38 @@ export const Profile = () => {
 
   const handleShowListings = async () => {
     try {
-      setShowListingsLoading(true);
       setShowListingsError(false);
 
       const res = await fetch(`api/user/listings/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
         setShowListingsError(true);
-        setShowListingsLoading(false);
+
         return;
       }
       setListings(data);
-      setShowListingsLoading(false);
     } catch (error) {
       setShowListingsError(true);
-      setShowListingsLoading(false);
     }
   };
-  console.log(listings);
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if (data.success === false) return console.log(data.message);
+
+      setListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -261,7 +274,10 @@ export const Profile = () => {
                 <p className="">{list.name}</p>
               </Link>
               <div className="flex flex-col items-center gap-2">
-                <button className="bg-red-600 text-white p-2 rounded-lg hover:opacity-80 w-16">
+                <button
+                  onClick={() => handleListingDelete(list._id)}
+                  className="bg-red-600 text-white p-2 rounded-lg hover:opacity-80 w-16"
+                >
                   Delete
                 </button>
                 <button className="bg-blue-600 text-white p-2 rounded-lg hover:opacity-80 w-16">
