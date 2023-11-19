@@ -4,5 +4,6 @@ import { Profile } from "./Profile";
 import { SignUp } from "./SignUp";
 import { SignIn } from "./SignIn.JSX";
 import { CreateListing } from "./CreateListing";
+import { UpdateListing } from "./UpdateListing";
 
-export { About, Home, Profile, SignUp, SignIn, CreateListing };
+export { About, Home, Profile, SignUp, SignIn, CreateListing, UpdateListing };

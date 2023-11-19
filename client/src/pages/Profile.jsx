@@ -280,9 +280,11 @@ export const Profile = () => {
                 >
                   Delete
                 </button>
-                <button className="bg-blue-600 text-white p-2 rounded-lg hover:opacity-80 w-16">
-                  Edit
-                </button>
+                <Link to={`/update-listing/${list._id}`}>
+                  <button className="bg-blue-600 text-white p-2 rounded-lg hover:opacity-80 w-16">
+                    Edit
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
