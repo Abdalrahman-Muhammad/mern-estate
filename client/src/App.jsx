@@ -8,6 +8,7 @@ import {
   CreateListing,
   UpdateListing,
   Listing,
+  Search,
 } from "./pages";
 import { Header, PrivateRoute } from "./components";
 
@@ -20,6 +21,7 @@ export const App = () => {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/about" element={<About />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/listing/:id" element={<Listing />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
