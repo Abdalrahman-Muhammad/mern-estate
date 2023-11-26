@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { SpinnerInfinity } from "spinners-react";
+import { ListingItem } from "../components";
 export const Search = () => {
   const navigate = useNavigate();
   const [sidebarData, setSidebarData] = useState({
@@ -230,10 +231,31 @@ export const Search = () => {
         </form>
       </div>
 
-      <div className="">
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold text-slate-700 border-b p-3 mt-5">
           listings results:
         </h1>
+        <div
+          className={`flex gap-4  flex-wrap p-7 ${
+            loading && "justify-center items-center min-h-screen md:mt-[-100px]"
+          }`}
+        >
+          {loading && (
+            <div className="">
+              <SpinnerInfinity />
+            </div>
+          )}
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              No listing found!
+            </p>
+          )}
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItem key={listing._id} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );
